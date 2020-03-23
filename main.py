@@ -10,8 +10,6 @@ def do_i2c():
     i2c = busio.I2C(board.SCL, board.SDA, frequency=100000)
     sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
     
-    #logging.warn(f"SGP30 serial #: {[hex(i) for i in sgp30.serial]}")
-    
     sgp30.iaq_init()
     sgp30.set_iaq_baseline(0x8973, 0x8AAE)
 
