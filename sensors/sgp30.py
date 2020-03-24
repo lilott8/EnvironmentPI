@@ -1,13 +1,15 @@
 from .base_sensor import BaseSensor
+from typing import Dict
 
 
 class SGP30(BaseSensor):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, ):
+        super().__init__(self.__class__.__name__)
 
     def calibrate(self):
-        pass
+        self.logger.debug("calibrating...")
 
-    def read(self):
-        pass
+    def read(self) -> Dict:
+        return {}
+
