@@ -40,7 +40,7 @@ class BME680(BaseSensor):
                         },
                     "time": timestamp,
                     "fields": {
-                        "temp": self.temp.normalize(self.sensor.temperature)
+                        "value": self.temp.normalize(self.sensor.temperature)
                         }
                     },
                 {
@@ -52,7 +52,7 @@ class BME680(BaseSensor):
                         },
                     "time": timestamp,
                     "fields": {
-                        "ohms": self.sensor.gas
+                        "value": self.sensor.gas
                         }
                     },
                 {
@@ -64,7 +64,7 @@ class BME680(BaseSensor):
                         },
                     "time": timestamp,
                     "fields": {
-                        "humidity": self.sensor.humidity
+                        "value": self.sensor.humidity
                         }
                     },
                 {
@@ -76,7 +76,7 @@ class BME680(BaseSensor):
                         },
                     "time": timestamp,
                     "fields": {
-                        "pressure": self.sensor.pressure
+                        "value": self.sensor.pressure
                         }
                     }
                 ]

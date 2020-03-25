@@ -36,7 +36,7 @@ class SGP30(BaseSensor):
                         },
                     "time": timestamp,
                     "fields": {
-                        "co2": self.sensor.eCO2
+                        "field": self.sensor.eCO2
                         }
                     },
                 {
@@ -48,7 +48,7 @@ class SGP30(BaseSensor):
                         },
                     "time": timestamp,
                     "fields": {
-                        "tvoc": self.sensor.TVOC
+                        "field": self.sensor.TVOC
                         }
                     } 
                 ]
