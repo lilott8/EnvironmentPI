@@ -13,8 +13,14 @@ class BME680(BaseSensor):
         self.sensor = adafruit_bme680.Adafruit_BME680_I2C(self.i2c)
         self.sensor.sea_level_pressure = pressure
 
+    def calibrate(self, iterations: int):
+        for x in range(iterations):
+            self.sensor.temperature
+            self.sensor.gas
+            self.sensor.pressure
+            self.sensor.altitude
 
-    def calibrate(self):
+    def debug(self):
         self.logger.info(f"Temperature: {self.temp.normalize(self.sensor.temperature)} {self.temp}")
         self.logger.info(f"Gas: {self.sensor.gas} ohm")
         self.logger.info(f"Humidity: {self.sensor.humidity} %")

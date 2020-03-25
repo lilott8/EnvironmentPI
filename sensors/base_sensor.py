@@ -10,7 +10,11 @@ class BaseSensor(metaclass=abc.ABCMeta):
         self.temp = temp
 
     @abc.abstractmethod
-    def calibrate(self):
+    def debug(self):
+        pass
+
+    @abc.abstractmethod
+    def calibrate(self, iterations: int):
         pass
 
     @abc.abstractmethod

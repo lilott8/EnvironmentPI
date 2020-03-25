@@ -13,7 +13,12 @@ class SGP30(BaseSensor):
         self.sensor.iaq_init()
         self.sensor.set_iaq_baseline(0x8973, 0x8AAE)
 
-    def calibrate(self):
+    def calibrate(self, iterations: int):
+        for x in range(iterations):
+            self.sensor.eCO2
+            self.sensor.TVOC
+
+    def debug(self):
         self.logger.debug("calibrating...")
         self.logger.info(f"eCO2: {self.sensor.eCO2} ppm")
         self.logger.info(f"TVOC: {self.sensor.TVOC} ppb")
