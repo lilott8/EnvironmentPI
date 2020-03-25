@@ -1,0 +1,11 @@
+[Unit]
+Description=Environmental Pi sensor station
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/pi/EnvironmentPI/main.py -c /home/pi/config.json
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
