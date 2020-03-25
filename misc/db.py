@@ -21,5 +21,9 @@ class DB(object):
 
         self.client.switch_database(self.config['database'])
 
+    def close(self):
+        self.client.close()
+
     def write(self, data: List):
-        self.logger.info(f"writing: {data}")
+        self.client.write_points(data)
+        #self.logger.info(f"writing: {data}")
