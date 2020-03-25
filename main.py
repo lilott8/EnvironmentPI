@@ -1,6 +1,7 @@
 import colorlog
 import logging
 import board
+import json
 import time
 import busio
 import adafruit_sgp30
@@ -15,24 +16,30 @@ import os
 
 
 def main(args):
-    db = DB(args.database)
-    temp = Temp.get_from_string(args.temp)
+    with open(args.config) as c:
+        config = json.load(c)
+    db = DB(config['database'])
+    
+    temperature = Temp.get_from_string(config['temperature'])
     i2c = busio.I2C(board.SCL, board.SDA)
-    logging.info(f"Using: {temp} for temp")
-    sensors = [BME680(i2c, temp, args.pressure, args.loc), SGP30(i2c, temp, args.loc)]
+    
+    sensors = [
+            BME680(i2c, temperature, config['pressure'], config['location']), 
+            SGP30(i2c, temperature, config['location'])
+            ]
+    logging.info("Done initializing sensors")
 
-    x = 0
     while True:
         response = list()
         for sensor in sensors:
             sensor.calibrate(5)
-            sensor.debug()
+            if config['debug']:
+                sensor.debug()
             response.extend(sensor.read())
+        if config['debug']:
             logging.warn(response)
         db.write(response)
-        x += 1
-        if x > 5:
-            break
+        time.sleep(120)
     db.close()
 
 if __name__ == "__main__":
@@ -40,11 +47,7 @@ if __name__ == "__main__":
             format='%(log_color)s%(levelname)s:\t[%(name)s.%(funcName)s:%(lineno)d]\t %(message)s')
     parser = argparse.ArgumentParser()
     default_path = os.path.expanduser('~/config.json')
-    parser.add_argument('-db', '--database', help="Path to the database config", default=default_path)
-    parser.add_argument('-p', '--pressure', help='Standing pressure of your location', default=760.0, type=float)
-    parser.add_argument('-t', '--temp', help="Units F|C|K", choices=['f', 'c', 'k'], default="f")
-    parser.add_argument("-l", "--loc", help="Location of sensor", choices=["living_room", "master_bed", "kids_room_1", "kids_room_2", "kitchen"], default="living_room")
-    
+    parser.add_argument('-c', '--config', help="Path to the config", default=default_path)
     args = parser.parse_args(sys.argv[1:])
 
     main(args)
