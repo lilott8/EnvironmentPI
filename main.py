@@ -12,7 +12,7 @@ import sys
 from sensors.bme680 import BME680
 from sensors.sgp30 import SGP30
 from misc.db import DB
-from misc.units import Temp
+from misc.config import Config
 import os
 from typing import Dict
 
@@ -23,15 +23,13 @@ class Environment(object):
         self.logger = colorlog.getLogger(self.__class__.__name__)
         signal.signal(signal.SIGINT, self.shutdown)
         signal.signal(signal.SIGTERM, self.shutdown)
-        with open(args.config) as c:
-            self.config = json.load(c)
-        self.db = DB(self.config['database'])
-        self.temperature = Temp.get_from_string(self.config['temperature'])
+        self.config = Config(args.config)
+        self.db = DB(self.config)
 
         i2c = busio.I2C(board.SCL, board.SDA)
         self.sensors = [
-                BME680(i2c, self.temperature, self.config['pressure'], self.config['location']), 
-                SGP30(i2c, self.temperature, self.config['location'])
+                BME680(i2c, self.config), 
+                SGP30(i2c, self.config)
                 ]
         self.alive = True
         pass
@@ -45,10 +43,10 @@ class Environment(object):
             response = list()
             for sensor in self.sensors:
                 sensor.calibrate(5)
-                if self.config['debug']:
+                if self.config.debug:
                     sensor.debug()
                 response.extend(sensor.read())
-            if self.config['debug']:
+            if self.config.debug:
                 self.logger.warn(response)
             self.db.write(response)
             time.sleep(120)

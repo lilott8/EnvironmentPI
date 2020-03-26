@@ -4,15 +4,16 @@ from busio import I2C
 import adafruit_bme680
 from misc.units import Temp
 import time
+from misc.config import Config
 
 
 class BME680(BaseSensor):
 
-    def __init__(self, i2c: I2C, temp: Temp = Temp.CELSIUS, pressure: float=760.0, loc: str = "living_room"):
-        super().__init__(self.__class__.__name__, temp, loc)
+    def __init__(self, i2c: I2C, config: Config):
+        super().__init__(self.__class__.__name__, config)
         self.i2c = i2c
         self.sensor = adafruit_bme680.Adafruit_BME680_I2C(self.i2c)
-        self.sensor.sea_level_pressure = pressure
+        self.sensor.sea_level_pressure = self.config.pressure
 
     def calibrate(self, iterations: int):
         for x in range(iterations):
@@ -23,7 +24,7 @@ class BME680(BaseSensor):
 
     def debug(self):
         self.logger.info(f"Temperature: {self.temp.normalize(self.sensor.temperature)} {self.temp}")
-        self.logger.info(f"Gas: {self.sensor.gas} ohm")
+        self.logger.info(f"VOC: {self.sensor.gas} ohm")
         self.logger.info(f"Humidity: {self.sensor.humidity} %")
         self.logger.info(f"Pressure: {self.sensor.pressure} hPa")
         self.logger.info(f"Altitude: {self.sensor.altitude} meters")
@@ -34,7 +35,7 @@ class BME680(BaseSensor):
                 {
                     "measurement": "temperature",
                     "tags": {
-                        "location": self.location,
+                        "location": self.location.to_string(),
                         "sensor": self.name,
                         "reading": "temperature"
                         },
@@ -44,11 +45,11 @@ class BME680(BaseSensor):
                         }
                     },
                 {
-                    "measurement": "gas",
+                    "measurement": "voc",
                     "tags": {
-                        "location": self.location,
+                        "location": self.location.to_string(),
                         "sensor": self.name,
-                        "reading": "gas"
+                        "reading": "voc"
                         },
                     "time": timestamp,
                     "fields": {
@@ -58,7 +59,7 @@ class BME680(BaseSensor):
                 {
                     "measurement": "humidity",
                     "tags": {
-                        "location": self.location,
+                        "location": self.location.to_string(),
                         "sensor": self.name,
                         "reading": "humidity"
                         },
@@ -70,7 +71,7 @@ class BME680(BaseSensor):
                 {
                     "measurement": "pressure",
                     "tags": {
-                        "location": self.location,
+                        "location": self.location.to_string(),
                         "sensor": self.name,
                         "reading": "pressure"
                         },

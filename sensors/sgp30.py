@@ -4,12 +4,13 @@ from misc.units import Temp
 import adafruit_sgp30
 from busio import I2C
 import time
+from misc.config import Config
 
 
 class SGP30(BaseSensor):
 
-    def __init__(self, i2c: I2C, temp: Temp, loc: str):
-        super().__init__(self.__class__.__name__, temp, loc)
+    def __init__(self, i2c: I2C, config: Config):
+        super().__init__(self.__class__.__name__, config)
         self.sensor = adafruit_sgp30.Adafruit_SGP30(i2c)
         self.sensor.iaq_init()
         self.sensor.set_iaq_baseline(0x8973, 0x8AAE)
@@ -30,7 +31,7 @@ class SGP30(BaseSensor):
                 {
                     "measurement": "co2",
                     "tags": {
-                        "location": self.location,
+                        "location": self.location.to_string(),
                         "sensor": self.name,
                         "reading": "co2"
                         },
@@ -42,7 +43,7 @@ class SGP30(BaseSensor):
                 {
                     "measurement": "tvoc",
                     "tags": {
-                        "location": self.location,
+                        "location": self.location.to_string(),
                         "sensor": self.name,
                         "reading": "tvoc"
                         },

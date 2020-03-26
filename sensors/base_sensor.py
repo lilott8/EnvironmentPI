@@ -1,15 +1,16 @@
 import abc
 import colorlog
 from typing import Dict
-
+from misc.config import Config
 
 class BaseSensor(metaclass=abc.ABCMeta):
 
-    def __init__(self, name: str, temp, loc: str):
+    def __init__(self, name: str, config: Config):
         self.logger = colorlog.getLogger(name)
+        self.config = config
         self.name = name
-        self.temp = temp
-        self.location = loc
+        self.temp = self.config.temperature
+        self.location = self.config.location
 
     @abc.abstractmethod
     def debug(self):
