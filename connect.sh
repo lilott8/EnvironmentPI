@@ -16,4 +16,4 @@ then
 	fi
 
 COMMAND="influx -username $USER $PASSWORD -database $DATABASE"
-echo $COMMAND
+eval $COMMAND
