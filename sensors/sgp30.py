@@ -11,21 +11,34 @@ class SGP30(BaseSensor):
 
     def __init__(self, i2c: I2C, config: Config):
         super().__init__(self.__class__.__name__, config)
-        self.sensor = adafruit_sgp30.Adafruit_SGP30(i2c)
-        self.sensor.iaq_init()
-        self.sensor.set_iaq_baseline(0x8973, 0x8AAE)
+        try:
+            self.sensor = adafruit_sgp30.Adafruit_SGP30(i2c)
+            self.sensor.iaq_init()
+            self.sensor.set_iaq_baseline(0x8973, 0x8AAE)
+            self.enabled = True
+        except:
+            self.enabled = False
 
     def calibrate(self, iterations: int):
-        for x in range(iterations):
-            self.sensor.eCO2
-            self.sensor.TVOC
+        if self.enabled:
+            for x in range(iterations):
+                self.sensor.eCO2
+                self.sensor.TVOC
+            self.logger.info("Done calibrating SGP30")
+        else:
+            self.logger.error("SGP30 disabled as a result of an i2c error")
 
     def debug(self):
-        self.logger.debug("calibrating...")
-        self.logger.info(f"eCO2: {self.sensor.eCO2} ppm")
-        self.logger.info(f"TVOC: {self.sensor.TVOC} ppb")
+        if self.enabled:
+            self.logger.debug("calibrating...")
+            self.logger.info(f"eCO2: {self.sensor.eCO2} ppm")
+            self.logger.info(f"TVOC: {self.sensor.TVOC} ppb")
+        else:
+            self.logger.error("sgp30 disabled as a result of an i2c error")
 
     def read(self) -> Dict:
+        if not self.enabled:
+            return []
         timestamp = time.time_ns()
         return [
                 {

@@ -42,18 +42,19 @@ class Environment(object):
         while self.alive:
             response = list()
             for sensor in self.sensors:
-                sensor.calibrate(5)
+                if sensor.enabled:
+                    sensor.calibrate(5)
+                    if self.config.debug:
+                        sensor.debug()
+                    response.extend(sensor.read())
                 if self.config.debug:
-                    sensor.debug()
-                response.extend(sensor.read())
-            if self.config.debug:
-                self.logger.warn(response)
+                    self.logger.warn(response)
             self.db.write(response)
             time.sleep(120)
         self.db.close()
 
     def shutdown(self, signum, frame):
-        self.logger.warn("Shutting down environment")
+        self.logger.warning("Shutting down environment")
         self.alive = False
 
 if __name__ == "__main__":
