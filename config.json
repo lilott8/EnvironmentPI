@@ -11,5 +11,6 @@
 	"location": "living_room",
 	"pressure": 1043.3,
 	"temperature": "f",
-	"debug": false
+	"debug": false,
+	"sleep": 120
 }

@@ -14,3 +14,5 @@ class Config(object):
         self.temperature = Temp.get_from_string(container['temperature'])
         self.location = Location.get_from_string(container['location'])
         self.debug = container['debug']
+        self.sleep = container['sleep']
+

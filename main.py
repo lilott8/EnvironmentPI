@@ -50,7 +50,7 @@ class Environment(object):
                 if self.config.debug:
                     self.logger.warn(response)
             self.db.write(response)
-            time.sleep(120)
+            time.sleep(self.config.sleep)
         self.db.close()
 
     def shutdown(self, signum, frame):
