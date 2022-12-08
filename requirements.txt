@@ -5,7 +5,7 @@ adafruit-circuitpython-sgp30==2.2.0
 Adafruit-PlatformDetect==2.4.0
 Adafruit-PureIO==1.0.4
 asn1crypto==0.24.0
-certifi==2018.8.24
+certifi==2022.12.7
 chardet==3.0.4
 colorlog==4.1.0
 cryptography==2.6.1
